@@ -45,11 +45,11 @@ class TileGame extends Component {
   }
 
   destroyTile = (tileKey) => {
-    const {tileIndex, totalTiles} = this.lookupTile(tileKey);
+    const {tileIndex, totalTiles, hasNew} = this.lookupTile(tileKey);
     if(tileIndex !== null){
       let newState = this.state;
-      newState.tiles[tileIndex] = null;
-      if(totalTiles < 6){
+      newState.tiles.splice(tileIndex, 1, null);
+      if(totalTiles < 6 && hasNew === false){
         newState['prepTile'] = true;
         newState['adderMessage'] = null;
       }
@@ -60,7 +60,7 @@ class TileGame extends Component {
   onBoardTile = (tileKey, cssParentId = null) => {
     const {tileIndex, totalTiles} = this.lookupTile(tileKey);
     if(tileIndex !== null){
-      let newTileProps = {};
+      let newTileProps = { isNew: false };
       if(this.state.tiles[tileIndex].props.onboarded === false){
         if(totalTiles < 5){
           this.setState({
@@ -70,7 +70,7 @@ class TileGame extends Component {
         } else {
           this.setState({
             prepTile: 'reset',
-            adderMessage: '5 tiles max',
+            adderMessage: '5 tile max reached',
           });
         }
         newTileProps['onboarded'] = true;
@@ -85,11 +85,15 @@ class TileGame extends Component {
   lookupTile = (tileKey) => {
     let returnObject = {
       tileIndex: null,
-      totalTiles: 0
+      totalTiles: 0,
+      hasNew: false,
     }
     for(let i = 0; i < this.state.tiles.length; i++){
       if(this.state.tiles[i] !== null){
         returnObject.totalTiles++;
+        if(this.state.tiles[i].props.isNew === true){
+          returnObject.hasNew = true;
+        }
         if(this.state.tiles[i].props.tileKey === tileKey){
           returnObject.tileIndex = i;
         }
@@ -111,7 +115,7 @@ class TileGame extends Component {
           marker: {color: tile.props.tileColor},
         };
         tile.props.chartData.forEach((sample) => {
-          dataObject.x.push(dataObject.x.length + 1);
+          dataObject.x.push(sample.date);
           dataObject.y.push(sample.high);
         });
         stockData.push(dataObject);
@@ -143,6 +147,16 @@ class TileGame extends Component {
                 r:10,
                 t:10,
                 b:30,
+              },
+              xaxis:{
+                title:{
+                  text:'Date',
+                }
+              },
+              yaxis:{
+                title:{
+                  text:'Price',
+                }
               }
             }}
             config={{

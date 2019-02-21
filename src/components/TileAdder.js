@@ -26,7 +26,7 @@ class TileAdder extends Component {
   prepTile = () => {
     if(this.props.prepTile === true){
       const tileKey = Funcs.makeAdHocId();
-      this.props.addTile( <Tile content='Type a stock symbol in the space above' dragDisabled={true} tileKey={tileKey} key={tileKey} cssParentId='#tileSpawn' /> );
+      this.props.addTile( <Tile content='Type a stock symbol in the space above' isNew={true} dragDisabled={true} tileKey={tileKey} key={tileKey} cssParentId='#tileSpawn' /> );
       this.setState({
         currentTileKey: tileKey,
         stockVal: '',
