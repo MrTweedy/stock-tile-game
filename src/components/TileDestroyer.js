@@ -23,7 +23,7 @@ class TileDestroyer extends Component {
 
   render(){
     return (
-      <div className='tileDestroyer dropSpot square fourth-width' id={this.state.adHocId}>
+      <div className='tileDestroyer dropSpot square fourth-width scale-text' id={this.state.adHocId}>
         <div>
           <p>Drop tiles here to delete them.</p>
         </div>

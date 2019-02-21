@@ -1,21 +1,29 @@
 #tileGame {
   width:calc(100% - 20px);
   margin:auto;
+  margin-top:10px;
   max-width:1000px;
   position:relative;
-  border:1px solid gray;
+  border:1px solid #ddd;
+  box-shadow:2px 2px 5px rgba(0,0,0,.5);
+  margin-bottom:10%;
+  padding-bottom:10px;
+  border-radius: 10px;
 }
 
-.tileGameTitle{
+#titleHolder{
   text-align:center;
-  border-bottom:1px solid gray;
-  padding-bottom:10px;
+  border-bottom:1px solid #aaa;
 }
 
 .stockGraph{
   display: table !important;
   width: 95%;
+  padding-left:2.5%;
+  padding-right:2.5%;
   margin: auto;
+  margin-top:20px;
+  border-top:1px dashed #aaa;
 }
 
 .tileBoard {
@@ -25,28 +33,53 @@
 }
 
 .tileDestroyer{
-  border:1px solid red;
-  float:right;
+  background-color:red;
+  border-radius:10px;
+  position:absolute !important;
+  bottom:0px;
+  right:10%;
 }
 .tileDestroyer p{
   width:100%;
-}
-
-.tileAdder{
-}
-.tileSpawn{
-  background-color:gray;
+  font-weight:bold;
   color:white;
   text-align:center;
 }
+.tileAdder{
+  position:relative;
+  left:10%;
+}
+.tileSpawn{
+  background-color:green;
+  color:white;
+  text-align:center;
+  border-radius:10px;
+}
+.symbolInput{
+  text-align:center;
+  font-size:large;
+  position:relative;
+  border:2px solid green;
+  border-radius:2px;
+  left:-3px;
+}
+#tileController{
+  margin-top:20px;
+  margin-bottom:20px;
+}
 
 .boardSpace{
-  border:1px solid gray;
+  border-radius:11px;
+  background: #e6eff7;
+  background: -moz-linear-gradient(top,  #e6eff7 0%, #c1e3f2 100%);
+  background: -webkit-linear-gradient(top,  #e6eff7 0%,#c1e3f2 100%);
+  background: linear-gradient(to bottom,  #e6eff7 0%,#c1e3f2 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6eff7', endColorstr='#c1e3f2',GradientType=0 );
 }
 
 .fifth-width{
   margin:2px;
-  width:calc(20% - 6px);
+  width:calc(20% - 4px);
   display:inline-block;
 }
 .fourth-width{
@@ -78,27 +111,74 @@
   position:absolute;
   top:0px;
   left:0px;
+  pointer-events:none;
+}
+.tileHolder *{
+  pointer-events:all;
 }
 
 .tile {
   position: absolute;
+  overflow: visible !important;
+  font-size:large;
+  font-weight:bold;
 }
 .tileOuter {
   background-color:white;
   border-radius:10px;
   box-shadow:1px 1px 2px 0px rgba(0,0,0,.5);
   border:1px solid gray;
-  width:100%;
-  height:100%;
+  width:calc(100% - 4px) !important;
+  height:calc(100% - 4px) !important;
 }
 .tile:active .tileOuter {
   box-shadow:2px 2px 5px 0px rgba(0,0,0,.5);
 }
 .tileInner {
-  width:calc(100% - 20px);
-  height:calc(100% - 20px);
-  margin:10px;
+  width:90%;
+  height:90%;
+  margin:5%;
   overflow:hidden;
+  text-align:center;
+  position:relative;
+}
+p.tileStockTitle{
+  text-align:center;
+  margin-top:0px;
+  margin-bottom:5px;
+  position:relative;
+  z-index:5;
+  text-shadow:0px 0px 5px white;
+}
+img.tileStockLogo{
+  margin:auto;
+  width:65%;
+  height:65%;
+  position:absolute;
+  top:17.5%;
+  left:17.5%;
+  z-index:0;
+}
+p.tileStockPrice{
+  position:absolute;
+  bottom:0px;
+  width:100%;
+  margin:0px;
+  text-align:center;
+  z-index:5;
+  text-shadow:0px 0px 5px white;
+}
+.tileLoadingContainer{
+  text-align:center;
+  width:50%;
+  margin:auto;
+}
+.tileLoadingContainer > div{
+  margin:auto;
+  max-width:100%;
+}
+.tileLoadingContainer svg{
+  max-width:100%;
 }
 
 .grabbable {
@@ -117,4 +197,20 @@
   background: -webkit-linear-gradient(top,  #ffffff 0%,#f3f3f3 50%,#ededed 51%,#ffffff 100%);
   background: linear-gradient(to bottom,  #ffffff 0%,#f3f3f3 50%,#ededed 51%,#ffffff 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 );
+}
+
+@media (max-width:800px){
+  .scale-text{
+    font-size:90%;
+  }
+}
+@media (max-width:600px){
+  .scale-text{
+    font-size:80%;
+  }
+}
+@media (max-width:400px){
+  .scale-text{
+    font-size:70%;
+  }
 }

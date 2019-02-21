@@ -5,7 +5,10 @@ import TileGame from './components/TileGame';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <TileGame title='Josh Hugo&rsquo;s Stock Tiles App' />, document.getElementById('root')
+  <TileGame
+    title='Josh Hugo&rsquo;s Stock Tiles App'
+    subTitle='A simple app to demonstrate components, state management, use of modules, and responsive design.'
+  />, document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

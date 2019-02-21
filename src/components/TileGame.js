@@ -14,6 +14,7 @@ class TileGame extends Component {
       tiles: [],
       tileCount: 0,
       prepTile: true,
+      adderMessage: null,
     }
   }
 
@@ -50,6 +51,7 @@ class TileGame extends Component {
       newState.tiles[tileIndex] = null;
       if(totalTiles < 6){
         newState['prepTile'] = true;
+        newState['adderMessage'] = null;
       }
       this.setState(newState);
     }
@@ -57,12 +59,19 @@ class TileGame extends Component {
 
   onBoardTile = (tileKey, cssParentId = null) => {
     const {tileIndex, totalTiles} = this.lookupTile(tileKey);
-    console.log(totalTiles);
     if(tileIndex !== null){
       let newTileProps = {};
       if(this.state.tiles[tileIndex].props.onboarded === false){
         if(totalTiles < 5){
-          this.setState({ prepTile: true });
+          this.setState({
+            prepTile: true,
+            adderMessage: null,
+          });
+        } else {
+          this.setState({
+            prepTile: 'reset',
+            adderMessage: '5 tiles max',
+          });
         }
         newTileProps['onboarded'] = true;
       }
@@ -89,15 +98,6 @@ class TileGame extends Component {
     return returnObject;
   }
 
-  randomColor = () => {
-    const hexDigits = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F']
-    let returnString = '#';
-    for(let i = 0; i < 6; i++){
-      returnString += hexDigits[Math.floor(Math.random() * hexDigits.length)];
-    }
-    return returnString;
-  }
-
   render(){
     let stockData = [];
     this.state.tiles.forEach((tile) => {
@@ -107,7 +107,8 @@ class TileGame extends Component {
           y: [],
           type: 'scatter',
           mode: 'lines+points',
-          marker: {color: this.randomColor()},
+          name: tile.props.stockSymbol,
+          marker: {color: tile.props.tileColor},
         };
         tile.props.chartData.forEach((sample) => {
           dataObject.x.push(dataObject.x.length + 1);
@@ -121,11 +122,14 @@ class TileGame extends Component {
         <div className='tileHolder'>
           {this.state.tiles}
         </div>
-        <h2 className='tileGameTitle'>
-          {this.props.title}
-        </h2>
-        <TileAdder addTile={this.addTile} updateTile={this.updateTile} prepTile={this.state.prepTile} />
-        <TileDestroyer destroyTile={this.destroyTile} style={{zIndex:0}} />
+        <div id='titleHolder'>
+          <h1 className='tileGameTitle'>{this.props.title}</h1>
+          <h3 className='tileGameSubTitle'>{this.props.subTitle}</h3>
+        </div>
+        <div id='tileController' style={{width:'100%', position:'relative'}}>
+          <TileDestroyer destroyTile={this.destroyTile} style={{zIndex:0}} />
+          <TileAdder addTile={this.addTile} updateTile={this.updateTile} prepTile={this.state.prepTile} adderMessage={this.state.adderMessage} />
+        </div>
         <TileBoard onboardTile={this.onBoardTile} />
           {stockData.length > 0 ?
             <Plot
@@ -133,11 +137,12 @@ class TileGame extends Component {
             data={stockData}
             layout={{
               autosize:true,
+              showlegend:true,
               margin:{
-                l:20,
-                r:0,
-                t:0,
-                b:20,
+                l:30,
+                r:10,
+                t:10,
+                b:30,
               }
             }}
             config={{
@@ -152,6 +157,7 @@ class TileGame extends Component {
 
 TileGame.defaultProps = {
   title: 'No Title Assigned',
+  subTitle: '',
 }
 
 export default TileGame;

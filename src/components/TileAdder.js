@@ -18,18 +18,25 @@ class TileAdder extends Component {
   }
 
   componentDidUpdate(){
-    if(this.props.prepTile){
+    if(this.props.prepTile !== false){
       this.prepTile();
     }
   }
 
   prepTile = () => {
-    const tileKey = Funcs.makeAdHocId();
-    this.props.addTile( <Tile content='Type a stock symbol' dragDisabled={true} tileKey={tileKey} key={tileKey} cssParentId='#tileSpawn' /> );
-    this.setState({
-      currentTileKey: tileKey,
-      stockVal: '',
-    });
+    if(this.props.prepTile === true){
+      const tileKey = Funcs.makeAdHocId();
+      this.props.addTile( <Tile content='Type a stock symbol in the space above' dragDisabled={true} tileKey={tileKey} key={tileKey} cssParentId='#tileSpawn' /> );
+      this.setState({
+        currentTileKey: tileKey,
+        stockVal: '',
+      });
+    } else if(this.props.prepTile === 'reset' && this.state.currentTileKey !== null) {
+      this.setState({
+        currentTileKey: null,
+        stockVal: '',
+      });
+    }
   }
 
   findStock = (e) => {
@@ -38,7 +45,7 @@ class TileAdder extends Component {
     this.props.updateTile( this.state.currentTileKey, { loadingState: 'loading' } );
     this.setState({
       stockVal: e.target.value.toUpperCase(),
-      currentTimer: setTimeout(() => this.findStock2(val), 1000),
+      currentTimer: setTimeout(() => this.findStock2(val), 500),
     });
   }
 
@@ -56,7 +63,7 @@ class TileAdder extends Component {
           content = (
             <div>
               <p className='tileStockTitle'>{stockData.companyName}</p>
-              <img src={stockData.logoUrl} alt={`${stockData.companyName} Logo`} className='tileStockLogo' />
+              <img src={stockData.logoUrl} alt={`${stockData.companyName} Logo`} className='tileStockLogo' onError={(e) => {e.target.src = 'logo.svg'}} />
               <p className='tileStockPrice'>{stockData.stockPrice}</p>
             </div>
           );
@@ -67,6 +74,8 @@ class TileAdder extends Component {
             content,
             dragDisabled,
             chartData: stockData.chartData,
+            stockSymbol: val.toUpperCase(),
+            tileColor: Funcs.randomColor(),
           }
         );
       })
@@ -76,11 +85,11 @@ class TileAdder extends Component {
   render(){
     return (
       <div className='tileAdder' id={this.state.adHocId}>
-        <input type='text' name='stockSelector' maxLength={5} autoComplete='off' value={this.state.stockVal} onChange={this.findStock}></input>
-        <br />
-        <div className='tileSpawn square fifth-width' id='tileSpawn'>
+        <input type='text' disabled={this.state.currentTileKey === null ? true : false} className='symbolInput fourth-width' maxLength={5} autoComplete='off' value={this.state.stockVal} onChange={this.findStock}></input>
+        <br/>
+        <div className='tileSpawn square fourth-width scale-text' id='tileSpawn'>
           <div>
-            <p>Tiles spawn here. Max of 5.</p>
+            <p style={{fontWeight:'bold'}}>{this.props.adderMessage}</p>
           </div>
         </div>
       </div>

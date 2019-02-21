@@ -19,6 +19,15 @@ async function fetchStockData(stockName){
   return returnObj;
 }
 
+function randomColor(){
+  const hexDigits = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F']
+  let returnString = '#';
+  for(let i = 0; i < 6; i++){
+    returnString += hexDigits[Math.floor(Math.random() * hexDigits.length)];
+  }
+  return returnString;
+}
+
 let idsCounter = -1;
 
 function makeAdHocId(){
@@ -29,4 +38,5 @@ function makeAdHocId(){
 export default {
   fetchStockData,
   makeAdHocId,
+  randomColor,
 };

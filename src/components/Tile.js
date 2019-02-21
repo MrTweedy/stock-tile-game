@@ -27,9 +27,10 @@ class Tile extends Component {
 
   snapSelf = (cssParentId) => {
     setTimeout(() =>
-    $(`.tileKey-${this.props.tileKey}`).position({
-      of: cssParentId
-    }), 10)
+      $(`.tileKey-${this.props.tileKey}`).position({
+        of: cssParentId
+      }),
+    10)
   }
 
   toggleDrag = (onOff = null) => {
@@ -54,7 +55,7 @@ class Tile extends Component {
         case 'loading':
           returnContent = (
             <div>
-              <div style={{textAlign:'center',width:'50%',margin:'auto'}}>
+              <div className='tileLoadingContainer'>
                 <ReactLoading type='bars' color='#999' />
               </div>
               <p style={{textAlign:'center'}}>Loading stock data</p>
@@ -78,8 +79,8 @@ class Tile extends Component {
     })();
 
     return (
-      <div className={`tile square grabbable fifth-width tileKey-${this.props.tileKey}`}>
-        <div className='tileOuter whiteGlossGradient'>
+      <div className={`tile square grabbable fifth-width scale-text tileKey-${this.props.tileKey}`}>
+        <div className='tileOuter whiteGlossGradient' style={{boxShadow:`inset 0px 0px 10px ${this.props.tileColor}`}}>
           <div className='tileInner'>
             {innerContent}
           </div>
@@ -93,6 +94,7 @@ Tile.defaultProps = {
   dragDisabled: false,
   onboarded: false,
   cssParentId: null,
+  tileColor:'#fff'
 }
 
 export default Tile;
