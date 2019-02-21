@@ -1,5 +1,4 @@
 import { IEXClient } from 'iex-api';
-import $ from 'jquery';
 import fetchPonyfill from 'fetch-ponyfill';
 
 const {fetch} = fetchPonyfill();
@@ -13,13 +12,21 @@ async function fetchStockData(stockName){
     return false;
   }
   returnObj.stockPrice = await iex.stockPrice(stockName);
-  returnObj.chartData = await iex.stockChart(stockName, '1d');
+  returnObj.chartData = await iex.stockChart(stockName, '1m');
   let companyData = await iex.stockCompany(stockName);
   returnObj.companyName = companyData.companyName;
   returnObj.companyDescription = companyData.description;
   return returnObj;
 }
 
+let idsCounter = -1;
+
+function makeAdHocId(){
+  idsCounter++
+  return `id-${idsCounter}`;
+}
+
 export default {
   fetchStockData,
+  makeAdHocId,
 };

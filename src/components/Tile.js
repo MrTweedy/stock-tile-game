@@ -1,18 +1,35 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/draggable';
+import 'jquery-ui/ui/position';
 import ReactLoading from 'react-loading';
 
 class Tile extends Component {
 
   componentDidMount(){
     $(`.tileKey-${this.props.tileKey}`).draggable({
-      stack: `${this.props.holderName} div`,
-      containment: this.props.holderName,
+      stack: 'body div',
+      revert:'invalid',
     });
-    if(this.props.startDisabled){
-      this.toggleDrag('off');
+    this.props.dragDisabled ? this.toggleDrag('off') : this.toggleDrag('on');
+    if(this.props.cssParentId !== null) this.snapSelf(this.props.cssParentId);
+  }
+
+  componentDidUpdate(){
+    if(this.props.cssParentId !== null){
+      this.snapSelf(this.props.cssParentId);
     }
+  }
+
+  componentWillUnmount(){
+    $(`.tileKey-${this.props.tileKey}`).draggable('destroy');
+  }
+
+  snapSelf = (cssParentId) => {
+    setTimeout(() =>
+    $(`.tileKey-${this.props.tileKey}`).position({
+      of: cssParentId
+    }), 10)
   }
 
   toggleDrag = (onOff = null) => {
@@ -30,11 +47,12 @@ class Tile extends Component {
   }
 
   render(){
-
+    this.props.dragDisabled ? this.toggleDrag('off') : this.toggleDrag('on');
     let innerContent = (() => {
+      let returnContent;
       switch (this.props.loadingState) {
         case 'loading':
-          return (
+          returnContent = (
             <div>
               <div style={{textAlign:'center',width:'50%',margin:'auto'}}>
                 <ReactLoading type='bars' color='#999' />
@@ -44,22 +62,23 @@ class Tile extends Component {
           );
           break;
         case 'error':
-          return (
+          returnContent = (
             <div>
               <p style={{textAlign:'center'}}>Error loading data</p>
             </div>
           );
           break;
         case 'ready':
-          return this.props.content;
+          returnContent = this.props.content;
           break;
         default:
-          return this.props.content;
+          returnContent = this.props.content;
       }
-    })()
+      return returnContent;
+    })();
 
     return (
-      <div className={`tile grabbable tileKey-${this.props.tileKey}`}>
+      <div className={`tile square grabbable fifth-width tileKey-${this.props.tileKey}`}>
         <div className='tileOuter whiteGlossGradient'>
           <div className='tileInner'>
             {innerContent}
@@ -71,7 +90,9 @@ class Tile extends Component {
 }
 
 Tile.defaultProps = {
-  startDisabled: false,
+  dragDisabled: false,
+  onboarded: false,
+  cssParentId: null,
 }
 
 export default Tile;
